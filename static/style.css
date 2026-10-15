@@ -1,0 +1,149 @@
+/* ============================================================
+   ErgoCalc - estilos compartilhados (Tela 1 e Tela 2)
+   ============================================================ */
+
+/* 1. Variáveis (paleta extraída das imagens) */
+:root {
+  --verde-escuro: #0d5b4d;   /* header, botões */
+  --verde-titulo: #0b3f36;   /* títulos principais */
+  --verde-medio: #4a9478;    /* faixa inferior, detalhes */
+  --verde-claro: #dcebe5;    /* fundo de ícones e tag */
+  --verde-suave: #eaf3ef;    /* seções e blocos */
+  --fundo: #f3f8f6;
+  --texto: #43534f;
+  --borda: #d6e2dd;
+  --branco: #fff;
+  --sombra: 0 6px 24px rgba(13, 91, 77, .08);
+}
+
+/* 2. Reset e base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  color: var(--texto);
+  background: var(--fundo);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--verde-medio); outline-offset: 2px; }
+
+/* 3. Logo */
+.logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; color: var(--verde-escuro); }
+.logo i { font-size: 30px; }
+.logo span { font-weight: 800; }
+
+/* 4. Botões */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  background: var(--verde-escuro); color: var(--branco);
+  border: 0; border-radius: 40px; padding: 14px 26px;
+  font: 600 15px 'Inter', sans-serif; cursor: pointer;
+  transition: background .2s;
+}
+.btn:hover { background: #094639; }
+
+/* ============================================================
+   TELA 1 - HOME
+   ============================================================ */
+.home { display: flex; flex-direction: column; min-height: 100vh; position: relative; overflow: hidden; }
+
+.topo { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 56px; }
+.topo .slogan { font-size: 12px; max-width: 150px; line-height: 1.35; margin-right: auto; margin-left: 4px; color: var(--verde-titulo); }
+.menu { display: flex; align-items: center; gap: 30px; font-size: 13px; font-weight: 500; color: var(--verde-titulo); }
+.menu a.ativo { padding-bottom: 6px; border-bottom: 2px solid var(--verde-escuro); font-weight: 600; }
+.menu .btn { padding: 12px 20px; border-radius: 10px; font-size: 13px; gap: 10px; }
+
+.hero {
+  flex: 1; display: grid; grid-template-columns: 1.05fr 1.15fr .8fr;
+  align-items: center; gap: 20px; padding: 10px 56px 100px;
+}
+.tag {
+  display: inline-block; background: var(--verde-claro); color: var(--verde-escuro);
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  padding: 7px 14px; border-radius: 20px; margin-bottom: 18px;
+}
+.hero h1 { font-size: 52px; line-height: 1.05; font-weight: 800; color: var(--verde-titulo); }
+.hero h2 { font-size: 30px; line-height: 1.15; font-weight: 700; color: var(--verde-escuro); margin: 6px 0 18px; }
+.hero p { font-size: 14px; max-width: 360px; margin-bottom: 28px; }
+.hero p strong { color: var(--verde-titulo); }
+.hero .btn { padding: 18px 34px; font-size: 16px; }
+
+/* ilustração */
+.ilustracao svg { width: 100%; max-width: 440px; display: block; margin: 0 auto; }
+
+/* benefícios */
+.beneficios { display: flex; flex-direction: column; gap: 26px; }
+.beneficio { display: flex; align-items: center; gap: 14px; }
+.beneficio .icone {
+  flex: none; width: 50px; height: 50px; border-radius: 50%;
+  background: var(--verde-claro); color: var(--verde-escuro);
+  display: grid; place-items: center; font-size: 20px;
+}
+.beneficio h3 { font-size: 13px; font-weight: 700; color: var(--verde-titulo); }
+.beneficio p { font-size: 12px; line-height: 1.4; }
+
+/* faixa inferior ondulada */
+.faixa {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 64px;
+  background: var(--verde-medio); color: var(--branco);
+  border-radius: 100% 100% 0 0 / 60px 60px 0 0;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px;
+}
+.faixa div { display: flex; align-items: center; gap: 14px; font-size: 12px; }
+.faixa div::before, .faixa div::after { content: ""; width: 60px; height: 1px; background: rgba(255,255,255,.5); }
+
+/* ============================================================
+   TELA 2 - CALCULADORA
+   ============================================================ */
+.barra { background: var(--verde-escuro); padding: 14px 56px; display: flex; align-items: center; justify-content: space-between; }
+.barra .logo { color: var(--branco); font-size: 21px; }
+.barra .logo i { font-size: 26px; }
+.barra .inicio { color: var(--branco); font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+
+.calc {
+  max-width: 1200px; margin: 0 auto; padding: 22px 28px 40px;
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 22px;
+}
+.card { background: var(--branco); border: 1px solid var(--borda); border-radius: 14px; padding: 20px 28px 28px; box-shadow: var(--sombra); }
+
+.voltar { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--verde-escuro); margin-bottom: 8px; }
+.card h1 { font-size: 28px; font-weight: 800; color: var(--verde-titulo); }
+.card .sub { font-size: 13px; color: var(--verde-escuro); margin: 6px 0 20px; max-width: 360px; }
+
+.campo { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.campo .icone {
+  flex: none; width: 42px; height: 42px; border-radius: 10px;
+  background: var(--verde-suave); color: var(--verde-titulo);
+  display: grid; place-items: center; font-size: 17px;
+}
+.campo div { flex: 1; }
+.campo label { display: block; font-size: 11px; font-weight: 700; color: var(--verde-titulo); margin-bottom: 4px; }
+.campo input {
+  width: 100%; height: 34px; padding: 0 12px;
+  border: 1px solid var(--borda); border-radius: 6px;
+  font: 13px 'Inter', sans-serif; color: var(--verde-titulo); background: var(--branco);
+}
+.campo input::placeholder { color: #a3b0ac; }
+.btn-calcular { width: 100%; border-radius: 10px; margin-top: 10px; padding: 16px; font-size: 15px; }
+
+/* coluna direita */
+.info { background: var(--verde-suave); border-radius: 14px; padding: 28px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.info h2 { font-size: 20px; font-weight: 800; color: var(--verde-titulo); margin-bottom: 14px; }
+.info p { font-size: 13px; color: var(--verde-escuro); margin-bottom: 14px; max-width: 330px; }
+.lembre {
+  background: var(--verde-claro); border-radius: 12px; padding: 18px 20px; margin-top: 18px;
+  display: flex; gap: 14px; align-items: flex-start; position: relative; z-index: 1;
+}
+.lembre .icone { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #c6e0d5; color: var(--verde-escuro); display: grid; place-items: center; }
+.lembre h3 { font-size: 13px; font-weight: 700; color: var(--verde-titulo); }
+.lembre p { font-size: 11px; margin: 2px 0 0; color: var(--texto); }
+.onda { position: absolute; right: 0; bottom: 0; width: 320px; max-width: 70%; }
+
+/* 5. Responsivo */
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: 1fr; padding: 10px 28px 110px; text-align: left; }
+  .topo, .barra { padding: 16px 24px; }
+  .topo .slogan, .menu a:not(.btn) { display: none; }
+  .calc { grid-template-columns: 1fr; }
+}
