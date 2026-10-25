@@ -1,80 +1,68 @@
+from flask import Flask, render_template, request
+from calculadora import calcular
 
-import math
-
-
-def validar_medidas(altura_poplitea, altura_cotovelo, altura_joelho, sapato, altura_cadeira):
-    if (
-        altura_poplitea <= 0
-        or altura_cotovelo <= 0
-        or altura_joelho <= 0
-        or sapato < 0
-        or altura_cadeira <= 0
-    ):
-        return False
-
-    return True
+app = Flask(__name__)
 
 
-def calcular(altura_poplitea, altura_cotovelo, altura_joelho, sapato, altura_cadeira):
-    if not validar_medidas(
-        altura_poplitea,
-        altura_cotovelo,
-        altura_joelho,
-        sapato,
-        altura_cadeira
-    ):
-        return None
-
-    altura_minima = (altura_poplitea + sapato) * math.cos(math.radians(30))
-    altura_maxima = (altura_poplitea + sapato) * math.cos(math.radians(5))
-    altura_media = (altura_minima + altura_maxima) / 2
-
-    if altura_cadeira < altura_minima:
-        avaliacao = "A cadeira está muito baixa."
-    elif altura_cadeira > altura_maxima:
-        avaliacao = "A cadeira está muito alta."
-    else:
-        avaliacao = "A altura da cadeira está dentro do intervalo calculado."
-
-    return {
-        "avaliacao": avaliacao,
-        "altura_minima": altura_minima,
-        "altura_maxima": altura_maxima,
-        "altura_media": altura_media
-    }
+@app.route("/")
+def inicio():
+    return render_template("index.html")
 
 
-print("===================================")
-print("             ERGOCALC")
-print(" Calculadora de altura da cadeira")
-print("===================================\n")
+@app.route("/calculadora")
+def abrir_calculadora():
+    return render_template("calculadora.html")
 
-try:
-    altura_poplitea = float(input("Altura poplítea (cm): "))
-    altura_cotovelo = float(input("Altura do cotovelo (cm): "))
-    altura_joelho = float(input("Altura do joelho (cm): "))
-    sapato = float(input("Espessura do solado (cm): "))
-    altura_cadeira = float(input("Altura atual da cadeira (cm): "))
 
-    resultado = calcular(
-        altura_poplitea,
-        altura_cotovelo,
-        altura_joelho,
-        sapato,
-        altura_cadeira
-    )
+@app.route("/calcular", methods=["POST"])
+def resultado():
+    nomes = [
+        "altura_poplitea",
+        "altura_cotovelo",
+        "altura_joelho",
+        "sapato",
+        "altura_cadeira",
+    ]
 
-    if resultado is None:
-        print("\nErro: as medidas informadas são inválidas.")
-    else:
-        print("\n========== RESULTADO ==========")
-        print(resultado["avaliacao"])
-        print(f"Altura mínima: {resultado['altura_minima']:.2f} cm")
-        print(f"Altura máxima: {resultado['altura_maxima']:.2f} cm")
-        print(f"Altura média:  {resultado['altura_media']:.2f} cm")
-        print("===============================")
+    medidas = {}
 
-except ValueError:
-    print("\nErro: digite apenas números válidos.")
+    try:
+        for nome in nomes:
+            valor = request.form.get(nome, "").strip()
 
-input("\nPressione Enter para encerrar...")
+            if not valor:
+                raise ValueError("Preencha todos os campos.")
+
+            medidas[nome] = float(valor.replace(",", "."))
+
+        resultado_calculo = calcular(
+            medidas["altura_poplitea"],
+            medidas["altura_cotovelo"],
+            medidas["altura_joelho"],
+            medidas["sapato"],
+            medidas["altura_cadeira"],
+        )
+
+        if not resultado_calculo["valido"]:
+            return render_template(
+                "calculadora.html",
+                erro=resultado_calculo["mensagem"],
+                medidas=medidas,
+            )
+
+        return render_template(
+            "calculadora.html",
+            resultado=resultado_calculo,
+            medidas=medidas,
+        )
+
+    except ValueError as erro:
+        return render_template(
+            "calculadora.html",
+            erro=str(erro) or "Digite valores numéricos válidos.",
+            medidas=request.form,
+        )
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

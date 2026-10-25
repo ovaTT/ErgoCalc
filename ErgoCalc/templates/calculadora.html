@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculadora | ErgoCalc</title>
+
+    <meta
+        name="description"
+        content="Insira as medidas para consultar o resultado do cálculo ergonômico."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+    <header class="cabecalho">
+        <div class="container navegacao">
+            <a class="logo" href="{{ url_for('inicio') }}">
+                <span class="logo-icone">E</span>
+                <span>ErgoCalc</span>
+            </a>
+
+            <nav class="menu" aria-label="Menu principal">
+                <a href="{{ url_for('inicio') }}">Início</a>
+                <a href="{{ url_for('inicio') }}#sobre">Sobre</a>
+
+                <a
+                    class="botao botao-pequeno"
+                    href="{{ url_for('abrir_calculadora') }}"
+                >
+                    Calculadora
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pagina-calculadora">
+        <div class="container calc-container">
+            <div class="calc-introducao">
+                <a class="voltar" href="{{ url_for('inicio') }}">
+                    <span aria-hidden="true">←</span>
+                    Voltar para o início
+                </a>
+
+                <span class="etiqueta">AVALIAÇÃO DE MEDIDAS</span>
+
+                <h1>
+                    Calculadora <span>ErgoCalc</span>
+                </h1>
+
+                <p>
+                    Preencha os campos abaixo com as medidas em centímetros.
+                    Depois, envie os dados para consultar o resultado.
+                </p>
+            </div>
+
+            <div class="calc-layout">
+                <section class="card calc-card">
+                    <div class="card-cabecalho">
+                        <div>
+                            <span class="card-etapa">ETAPA 01</span>
+                            <h2>Informe suas medidas</h2>
+                        </div>
+
+                        <div class="card-icone" aria-hidden="true">
+                            ↔
+                        </div>
+                    </div>
+
+                    {% if erro %}
+                        <div class="mensagem erro" role="alert">
+                            <strong>Não foi possível calcular.</strong>
+                            <p>{{ erro }}</p>
+                        </div>
+                    {% endif %}
+
+                    <form
+                        action="{{ url_for('resultado') }}"
+                        method="POST"
+                        class="form-calculadora"
+                    >
+                        <div class="campo">
+                            <label for="poplitea">
+                                Altura poplítea
+                                <span class="unidade">(cm)</span>
+                            </label>
+
+                            <input
+                                id="poplitea"
+                                name="altura_poplitea"
+                                type="number"
+                                min="0.1"
+                                max="250"
+                                step="0.1"
+                                required
+                                placeholder="Ex.: 45.0"
+                                value="{{ medidas.get('altura_poplitea', '') if medidas else '' }}"
+                            >
+
+                            <small>
+                                Distância vertical entre o chão e a
+                                região posterior do joelho, conforme
+                                o método de medição adotado.
+                            </small>
+                        </div>
+
+                        <div class="campo">
+                            <label for="cotovelo">
+                                Altura do cotovelo
+                                <span class="unidade">(cm)</span>
+                            </label>
+
+                            <input
+                                id="cotovelo"
+                                name="altura_cotovelo"
+                                type="number"
+                                min="0.1"
+                                max="250"
+                                step="0.1"
+                                required
+                                placeholder="Ex.: 27.0"
+                                value="{{ medidas.get('altura_cotovelo', '') if medidas else '' }}"
+                            >
+
+                            <small>
+                                Informe a medida de acordo com a
+                                referência de postura utilizada.
+                            </small>
+                        </div>
+
+                        <div class="campo">
+                            <label for="joelho">
+                                Altura do joelho
+                                <span class="unidade">(cm)</span>
+                            </label>
+
+                            <input
+                                id="joelho"
+                                name="altura_joelho"
+                                type="number"
+                                min="0.1"
+                                max="250"
+                                step="0.1"
+                                required
+                                placeholder="Ex.: 48.0"
+                                value="{{ medidas.get('altura_joelho', '') if medidas else '' }}"
+                            >
+
+                            <small>
+                                Utilize a mesma unidade para todas
+                                as medidas informadas.
+                            </small>
+                        </div>
+
+                        <div class="campo">
+                            <label for="sola">
+                                Espessura da sola do calçado
+                                <span class="unidade">(cm)</span>
+                            </label>
+
+                            <input
+                                id="sola"
+                                name="sapato"
+                                type="number"
+                                min="0"
+                                max="20"
+                                step="0.1"
+                                required
+                                placeholder="Ex.: 2.5"
+                                value="{{ medidas.get('sapato', '') if medidas else '' }}"
+                            >
+
+                            <small>
+                                Informe a espessura da sola ou zero
+                                caso não queira acrescentar essa medida.
+                            </small>
+                        </div>
+
+                        <div class="campo">
+                            <label for="assento">
+                                Altura atual do assento da cadeira
+                                <span class="unidade">(cm)</span>
+                            </label>
+
+                            <input
+                                id="assento"
+                                name="altura_cadeira"
+                                type="number"
+                                min="0.1"
+                                max="250"
+                                step="0.1"
+                                required
+                                placeholder="Ex.: 45.0"
+                                value="{{ medidas.get('altura_cadeira', '') if medidas else '' }}"
+                            >
+
+                            <small>
+                                Meça do chão até a superfície
+                                do assento.
+                            </small>
+                        </div>
+
+                        <button
+                            class="botao botao-submit"
+                            type="submit"
+                        >
+                            Calcular medidas
+                            <span aria-hidden="true">→</span>
+                        </button>
+
+                        <p class="form-nota">
+                            Confira os valores antes de enviar.
+                            Todos os campos são obrigatórios.
+                        </p>
+                    </form>
+                </section>
+
+                <aside class="card orientacao-card">
+                    <div class="orientacao-icone" aria-hidden="true">
+                        i
+                    </div>
+
+                    <h2>Antes de começar</h2>
+
+                    <p>
+                        Para obter um resultado consistente, confira
+                        estes pontos:
+                    </p>
+
+                    <ul class="lista-orientacoes">
+                        <li>
+                            <span class="lista-check">✓</span>
+                            <span>Use centímetros em todos os campos.</span>
+                        </li>
+
+                        <li>
+                            <span class="lista-check">✓</span>
+                            <span>Evite estimar medidas se puder medi-las.</span>
+                        </li>
+
+                        <li>
+                            <span class="lista-check">✓</span>
+                            <span>Utilize números positivos, exceto a sola,
+                                que pode ser zero.</span>
+                        </li>
+                    </ul>
+
+                    <div class="orientacao-aviso">
+                        <strong>Importante</strong>
+                        <p>
+                            A fórmula implementada no projeto ainda
+                            precisa de validação ergonômica. O resultado
+                            não deve ser interpretado como uma medida
+                            ideal confirmada para qualquer pessoa.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+
+            {% if resultado %}
+                <section class="resultado" aria-live="polite">
+                    <div class="resultado-cabecalho">
+                        <div>
+                            <span class="card-etapa">ETAPA 02</span>
+                            <h2>Resultado da avaliação</h2>
+                        </div>
+
+                        <span class="resultado-status">
+                            Cálculo concluído
+                        </span>
+                    </div>
+
+                    <p class="avaliacao">
+                        {{ resultado.avaliacao }}
+                    </p>
+
+                    <div class="resultado-grade">
+                        <article class="resultado-item">
+                            <span>Altura mínima calculada</span>
+                            <strong>
+                                {{ "%.2f"|format(resultado.altura_minima) }} cm
+                            </strong>
+                        </article>
+
+                        <article class="resultado-item">
+                            <span>Altura média calculada</span>
+                            <strong>
+                                {{ "%.2f"|format(resultado.altura_media) }} cm
+                            </strong>
+                        </article>
+
+                        <article class="resultado-item">
+                            <span>Altura máxima calculada</span>
+                            <strong>
+                                {{ "%.2f"|format(resultado.altura_maxima) }} cm
+                            </strong>
+                        </article>
+                    </div>
+
+                    <p class="aviso-ergonomico">
+                        Os valores são gerados pelas fórmulas atualmente
+                        configuradas no sistema. A validade ergonômica
+                        dessas fórmulas precisa ser confirmada antes
+                        de utilizar os resultados como recomendação.
+                    </p>
+
+                    <a
+                        class="botao botao-secundario"
+                        href="{{ url_for('abrir_calculadora') }}"
+                    >
+                        Fazer outro cálculo
+                    </a>
+                </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <div class="container rodape-conteudo">
+            <a class="logo logo-rodape" href="{{ url_for('inicio') }}">
+                <span class="logo-icone">E</span>
+                <span>ErgoCalc</span>
+            </a>
+
+            <p>Projeto informativo sobre ergonomia.</p>
+
+            <span>© 2026 ErgoCalc</span>
+        </div>
+    </footer>
+</body>
+</html>
